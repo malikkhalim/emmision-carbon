@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 });
 
 // Route to serve the project description
-app.get('/project_description', (req, res) => {
+app.get('/projectdescription', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'project_description.html'));
 });
 
@@ -80,7 +80,7 @@ app.post('/register', async (req, res) => {
         const hashedPassword = bcrypt.hashSync(password, saltRounds);
         const newUser = { username, email, password: hashedPassword };
         await usersCollection.insertOne(newUser);
-        res.json({ success: true });
+        res.redirect('/login');
     } catch (error) {
         console.error('Error during registration:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
@@ -91,7 +91,7 @@ app.post('/register', async (req, res) => {
 const startServer = async () => {
     try {
         await connectToDatabase();
-        app.listen(port, () => {
+        app.listen(port, '0.0.0.0', () => {
             console.log(`Server is running on http://localhost:${port}`);
         });
     } catch (error) {
@@ -99,5 +99,6 @@ const startServer = async () => {
         process.exit(1); // Exit the process with an error code
     }
 };
+
 
 startServer();
